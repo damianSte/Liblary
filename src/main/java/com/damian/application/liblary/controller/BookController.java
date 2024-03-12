@@ -4,12 +4,15 @@ import com.damian.application.liblary.infrastucture.entity.BookEntity;
 import com.damian.application.liblary.infrastucture.repository.BookRepository;
 import com.damian.application.liblary.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/books")
 public class BookController {
 
     private BookService bookService;
@@ -18,11 +21,27 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/api/books")
+    @GetMapping
     public List<BookEntity> getAllBooks(){
 
         return bookService.getAll();
     }
 
+    @GetMapping("{book_id}")
+    public BookEntity getOne(@PathVariable long book_id){
+        return bookService.getOne(book_id);
+    }
+
+    @PostMapping
+    public ResponseEntity<BookEntity> create(@RequestBody BookEntity book){
+        var newBook = bookService.create(book);
+        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
+    }
+    @DeleteMapping("{book_id}")
+    public ResponseEntity<Void> delete(@PathVariable long book_id){
+        bookService.delete(book_id);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

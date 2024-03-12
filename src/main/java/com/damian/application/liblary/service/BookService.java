@@ -28,4 +28,10 @@ public class BookService {
     public BookEntity create (BookEntity book){
         return bookRepository.save(book);
     }
+    public void delete(long book_id){
+        if (bookRepository.existsById(book_id)){
+            throw new RuntimeException();
+        }
+        bookRepository.deleteById(book_id);
+    }
 }

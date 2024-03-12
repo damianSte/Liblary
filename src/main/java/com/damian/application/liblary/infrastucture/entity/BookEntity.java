@@ -28,8 +28,8 @@ public class BookEntity {
     private String publisher;
 
     @Basic
-    @Column(name= "published_year")
-    private int published_year;
+    @Column(name= "publication_year")
+    private int publication_year;
 
     @Basic
     @Column(name= "available_copies")
@@ -75,12 +75,12 @@ public class BookEntity {
         this.publisher = publisher;
     }
 
-    public int getPublished_year() {
-        return published_year;
+    public int getPublication_year() {
+        return publication_year;
     }
 
-    public void setPublished_year(int published_year) {
-        this.published_year = published_year;
+    public void setPublication_year(int publication_year) {
+        this.publication_year = publication_year;
     }
 
     public int getAvailable_copies() {
