@@ -1,5 +1,6 @@
 package com.damian.application.liblary.service;
 
+import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
