@@ -1,9 +1,7 @@
 package com.damian.application.liblary.controller;
 
 import com.damian.application.liblary.infrastucture.entity.LoanEntity;
-import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.service.LoanService;
-import com.damian.application.liblary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,9 @@
 package com.damian.application.liblary.controller;
 
 import com.damian.application.liblary.infrastucture.entity.BookEntity;
-import com.damian.application.liblary.infrastucture.repository.BookRepository;
 import com.damian.application.liblary.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

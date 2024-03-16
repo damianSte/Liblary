@@ -1,6 +1,6 @@
 package com.damian.application.liblary.infrastucture.entity;
 
-import com.damian.application.liblary.infrastucture.entity.BookEntity;
+
 import jakarta.persistence.*;
 
 @Entity
