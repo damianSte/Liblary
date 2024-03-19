@@ -1,5 +1,8 @@
 package com.damian.application.liblary.controller;
 
+import com.damian.application.liblary.DTOs.UserDTO.CreateUserDTO;
+import com.damian.application.liblary.DTOs.UserDTO.CreateUserResponseDTO;
+import com.damian.application.liblary.DTOs.UserDTO.GetUserDTO;
 import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +17,25 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public List<UserEntity> getAllUsers(){
+    public List<GetUserDTO> getAllUers(){return userService.getAll();}
 
-        return userService.getAll();
-    }
-
-    @GetMapping("{user_id}")
-    public UserEntity getOne(@PathVariable long user_id){
-        return userService.getOne(user_id);
-    }
+    @GetMapping("/{user_id}")
+    public GetUserDTO getOne(@PathVariable long user_id){return userService.getOne(user_id);}
 
     @PostMapping
-    public ResponseEntity<UserEntity> create(@RequestBody UserEntity user){
-        var newUser = userService.create(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    public ResponseEntity<CreateUserResponseDTO> create(@RequestBody CreateUserDTO user){
+        var newUser= userService.create(user);
+        return new ResponseEntity<>(newUser,HttpStatus.CREATED);
     }
-    @DeleteMapping("{user_id}")
+
+    @DeleteMapping("/{user_id}")
     public ResponseEntity<Void> delete(@PathVariable long user_id){
         userService.delete(user_id);
         return ResponseEntity.noContent().build();
