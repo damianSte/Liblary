@@ -1,5 +1,6 @@
 package com.damian.application.liblary.service;
 
+import com.damian.application.liblary.DTOs.UserDTO.LogInDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterResponseDto;
 import com.damian.application.liblary.infrastucture.entity.AuthEntity;
@@ -8,6 +9,9 @@ import com.damian.application.liblary.infrastucture.repository.AuthRepository;
 import com.damian.application.liblary.infrastucture.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.management.RuntimeErrorException;
 
 @Service
 public class AuthService {
@@ -36,4 +40,12 @@ public class AuthService {
 
         return new RegisterResponseDto(createAuth.getUsername(), createAuth.getRole())
     }
+
+    public void login(LogInDto logInDto) {
+        AuthEntity authEntity = authRepository.findByUserName(logInDto.getUsername()).orElseThrow(RuntimeException::new);
+        if (!authEntity.getPassword().equals(logInDto.getPassword())){
+            throw new RuntimeException();
+        }
+    }
+
 }
