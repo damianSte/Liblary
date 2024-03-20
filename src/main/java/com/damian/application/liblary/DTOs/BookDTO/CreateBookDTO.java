@@ -5,16 +5,16 @@ public class CreateBookDTO {
     private String title;
     private String author;
     private String publisher;
-    private int yearPublished;
+    private int publication_year;
     private int availableCopies;
 
 
-    public CreateBookDTO(String isbn, String title, String author, String publisher, int yearPublished, int availableCopies) {
+    public CreateBookDTO(String isbn, String title, String author, String publisher, int publication_year, int availableCopies) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
-        this.yearPublished = yearPublished;
+        this.publication_year = publication_year;
         this.availableCopies = availableCopies;
     }
 
@@ -55,11 +55,11 @@ public class CreateBookDTO {
     }
 
     public int getYearPublished() {
-        return yearPublished;
+        return publication_year;
     }
 
     public void setYearPublished(int yearPublished) {
-        this.yearPublished = yearPublished;
+        this.publication_year = yearPublished;
     }
 
     public int getAvailableCopies() {
