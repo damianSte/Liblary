@@ -2,6 +2,7 @@ package com.damian.application.liblary.controller;
 
 
 import com.damian.application.liblary.DTOs.UserDTO.LogInDto;
+import com.damian.application.liblary.DTOs.UserDTO.LogInResponseDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterResponseDto;
 import com.damian.application.liblary.service.AuthService;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
 
     private final AuthService authService;
 
@@ -33,8 +33,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void register(@RequestBody LogInDto requestBody) {
-        authService.login(requestBody);
+    public ResponseEntity<LogInResponseDto> register(@RequestBody LogInDto requestBody) {
+
+       LogInResponseDto dto = authService.login(requestBody);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
 }

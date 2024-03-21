@@ -3,25 +3,27 @@ package com.damian.application.liblary.service;
 import com.damian.application.liblary.DTOs.UserDTO.LogInDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterResponseDto;
+import com.damian.application.liblary.DTOs.UserDTO.LogInResponseDto;
 import com.damian.application.liblary.infrastucture.entity.AuthEntity;
 import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.infrastucture.repository.AuthRepository;
 import com.damian.application.liblary.infrastucture.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.management.RuntimeErrorException;
 
 @Service
 public class AuthService {
 
     private final AuthRepository authRepository;
-    private final UserRepository userRepository
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Autowired
-    public AuthService(AuthRepository authRepository) {
+    public AuthService(AuthRepository authRepository, UserRepository userRepository, JwtService jwtService) {
         this.authRepository = authRepository;
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public RegisterResponseDto register(RegisterDto registerDto) {
@@ -38,14 +40,18 @@ public class AuthService {
 
         AuthEntity createAuth = authRepository.save(authEntity);
 
-        return new RegisterResponseDto(createAuth.getUsername(), createAuth.getRole())
+        return new RegisterResponseDto(createAuth.getUsername(), createAuth.getRole());
     }
 
-    public void login(LogInDto logInDto) {
+    public LogInResponseDto login (LogInDto logInDto) {
         AuthEntity authEntity = authRepository.findByUserName(logInDto.getUsername()).orElseThrow(RuntimeException::new);
         if (!authEntity.getPassword().equals(logInDto.getPassword())){
             throw new RuntimeException();
         }
+
+        String token = jwtService.generateToken(authEntity);
+
+        return new LogInResponseDto(token);
     }
 
 }
