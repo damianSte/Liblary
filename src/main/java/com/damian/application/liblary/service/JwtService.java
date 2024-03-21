@@ -1,5 +1,6 @@
 package com.damian.application.liblary.service;
 
+import com.damian.application.liblary.UserRole;
 import com.damian.application.liblary.infrastucture.entity.AuthEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +20,7 @@ public class JwtService {
 
     private long tokenLifeTime = 1000 * 60 * 24;
 
-    @Value("${token.signing.key}")
+    @Value("${token.sign.keys}")
     public String jwtSigningKey;
 
     public JwtService() {
@@ -57,6 +58,10 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 
+    }
+
+    public UserRole extractUserRole(String token){
+        return extractClaims(token, claims -> claims.get("role", UserRole.class));
     }
 
 

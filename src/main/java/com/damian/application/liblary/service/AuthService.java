@@ -4,6 +4,7 @@ import com.damian.application.liblary.DTOs.UserDTO.LogInDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterResponseDto;
 import com.damian.application.liblary.DTOs.UserDTO.LogInResponseDto;
+import com.damian.application.liblary.UserRole;
 import com.damian.application.liblary.infrastucture.entity.AuthEntity;
 import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.infrastucture.repository.AuthRepository;
@@ -51,7 +52,9 @@ public class AuthService {
 
         String token = jwtService.generateToken(authEntity);
 
-        return new LogInResponseDto(token);
+        UserRole userRole = jwtService.extractUserRole(token);
+
+        return new LogInResponseDto(userRole.name());
     }
 
 }
