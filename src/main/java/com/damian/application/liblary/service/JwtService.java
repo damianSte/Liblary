@@ -36,7 +36,8 @@ public class JwtService {
     public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
     }
-    private boolean isTokenValid(String token) {
+    public boolean isTokenValid(String token) {
+
         try {
             return !isTokenExpired(token);
         } catch (Exception e){

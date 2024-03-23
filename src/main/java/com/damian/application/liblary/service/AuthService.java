@@ -9,6 +9,7 @@ import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.infrastucture.repository.AuthRepository;
 import com.damian.application.liblary.infrastucture.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -19,33 +20,36 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public AuthService(AuthRepository authRepository, UserRepository userRepository, JwtService jwtService) {
+    public AuthService(AuthRepository authRepository, UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.authRepository = authRepository;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public RegisterResponseDto register(RegisterDto registerDto) {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(registerDto.getEmail());
-        UserEntity createdUser = userRepository.save(userEntity);
+        userRepository.save(userEntity);
 
         AuthEntity authEntity = new AuthEntity();
-        authEntity.setPassword(registerDto.getPassword());
+        authEntity.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         authEntity.setUsername(registerDto.getUsername());
         authEntity.setRole(registerDto.getRole());
-        authEntity.setUser(createdUser);
+        authEntity.setUser(userEntity);
 
-        AuthEntity createAuth = authRepository.save(authEntity);
+        authRepository.save(authEntity);
 
-        return new RegisterResponseDto(createAuth.getUsername(), createAuth.getRole());
+        return new RegisterResponseDto(userEntity.getUser_id(), authEntity.getUsername(), authEntity.getRole() );
     }
 
     public LogInResponseDto login (LogInDto logInDto) {
         AuthEntity authEntity = authRepository.findByUsername(logInDto.getUsername()).orElseThrow(RuntimeException::new);
-        if (!authEntity.getPassword().equals(logInDto.getPassword())){
+        if (!passwordEncoder.matches(logInDto.getPassword(),authEntity.getPassword())){
             throw new RuntimeException();
         }
 
