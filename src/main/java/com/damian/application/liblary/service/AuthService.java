@@ -4,6 +4,8 @@ import com.damian.application.liblary.DTOs.UserDTO.LogInDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterDto;
 import com.damian.application.liblary.DTOs.UserDTO.RegisterResponseDto;
 import com.damian.application.liblary.DTOs.UserDTO.LogInResponseDto;
+import com.damian.application.liblary.error.UserAlreadyExistsException;
+import com.damian.application.liblary.error.UserNotFoundException;
 import com.damian.application.liblary.infrastucture.entity.AuthEntity;
 import com.damian.application.liblary.infrastucture.entity.UserEntity;
 import com.damian.application.liblary.infrastucture.repository.AuthRepository;
@@ -11,6 +13,8 @@ import com.damian.application.liblary.infrastucture.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -32,6 +36,12 @@ public class AuthService {
 
     public RegisterResponseDto register(RegisterDto registerDto) {
 
+        Optional<AuthEntity> existingAuth = authRepository.findByUsername(registerDto.getUsername());
+
+        if (existingAuth.isPresent()) {
+            throw UserAlreadyExistsException.create(registerDto.getUsername());
+        }
+
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(registerDto.getEmail());
         userRepository.save(userEntity);
@@ -44,12 +54,19 @@ public class AuthService {
 
         authRepository.save(authEntity);
 
-        return new RegisterResponseDto(userEntity.getUser_id(), authEntity.getUsername(), authEntity.getRole() );
+        return new RegisterResponseDto(userEntity.getUser_id(), authEntity.getUsername(), authEntity.getRole());
     }
 
-    public LogInResponseDto login (LogInDto logInDto) {
+    public LogInResponseDto login(LogInDto logInDto) {
+
+        Optional<AuthEntity> existingAuth = authRepository.findByUsername(logInDto.getUsername());
+
+        if (existingAuth.isEmpty()) {
+            throw UserNotFoundException.create(logInDto.getUsername());
+        }
+
         AuthEntity authEntity = authRepository.findByUsername(logInDto.getUsername()).orElseThrow(RuntimeException::new);
-        if (!passwordEncoder.matches(logInDto.getPassword(),authEntity.getPassword())){
+        if (!passwordEncoder.matches(logInDto.getPassword(), authEntity.getPassword())) {
             throw new RuntimeException();
         }
 

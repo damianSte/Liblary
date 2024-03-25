@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
+@PreAuthorize("hasRole('ADMIN')")
 public class AuthController {
 
     private final AuthService authService;
@@ -35,6 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<LogInResponseDto> login(@RequestBody LogInDto requestBody) {
 
        LogInResponseDto dto = authService.login(requestBody);
